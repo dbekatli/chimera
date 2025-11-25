@@ -46,8 +46,8 @@ module chimera_clu_domain
   //-----------------------------
   // Wide AXI ports
   //-----------------------------
-  output wide_out_req_t    [          iomsb(Cfg.ChsCfg.AxiExtNumWideMst):0] wide_out_req_o,
-  input  wide_out_resp_t   [          iomsb(Cfg.ChsCfg.AxiExtNumWideMst):0] wide_out_resp_i,
+  output wide_out_req_t    [          iomsb(Cfg.ChsAxiExtNumWideMst):0] wide_out_req_o,
+  input  wide_out_resp_t   [          iomsb(Cfg.ChsAxiExtNumWideMst):0] wide_out_resp_i,
   //-----------------------------
   // Isolation control ports
   //-----------------------------
@@ -67,12 +67,12 @@ module chimera_clu_domain
   narrow_in_resp_t  [    iomsb(Cfg.ChsCfg.AxiExtNumSlv):0] narrow_in_isolated_resp;
   narrow_out_req_t  [    iomsb(Cfg.ChsCfg.AxiExtNumMst):0] narrow_out_isolated_req;
   narrow_out_resp_t [    iomsb(Cfg.ChsCfg.AxiExtNumMst):0] narrow_out_isolated_resp;
-  wide_out_req_t    [iomsb(Cfg.ChsCfg.AxiExtNumWideMst):0] wide_out_isolated_req;
-  wide_out_resp_t   [iomsb(Cfg.ChsCfg.AxiExtNumWideMst):0] wide_out_isolated_resp;
+  wide_out_req_t    [iomsb(Cfg.ChsAxiExtNumWideMst):0] wide_out_isolated_req;
+  wide_out_resp_t   [iomsb(Cfg.ChsAxiExtNumWideMst):0] wide_out_isolated_resp;
 
   logic             [    iomsb(Cfg.ChsCfg.AxiExtNumSlv):0] isolated_narrow_in;
   logic             [    iomsb(Cfg.ChsCfg.AxiExtNumMst):0] isolated_narrow_out;
-  logic             [iomsb(Cfg.ChsCfg.AxiExtNumWideMst):0] isolated_wide_out;
+  logic             [iomsb(Cfg.ChsAxiExtNumWideMst):0] isolated_wide_out;
 
 
 

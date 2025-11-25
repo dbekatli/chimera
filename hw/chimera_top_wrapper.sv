@@ -99,8 +99,8 @@ module chimera_top_wrapper
   // External AXI crossbar ports
   axi_mst_req_t [iomsb(ChsCfg.AxiExtNumMst):0] axi_mst_req;
   axi_mst_rsp_t [iomsb(ChsCfg.AxiExtNumMst):0] axi_mst_rsp;
-  axi_wide_mst_req_t [iomsb(ChsCfg.AxiExtNumWideMst):0] axi_wide_mst_req;
-  axi_wide_mst_rsp_t [iomsb(ChsCfg.AxiExtNumWideMst):0] axi_wide_mst_rsp;
+  axi_wide_mst_req_t [iomsb(Cfg.ChsAxiExtNumWideMst):0] axi_wide_mst_req;
+  axi_wide_mst_rsp_t [iomsb(Cfg.ChsAxiExtNumWideMst):0] axi_wide_mst_rsp;
   axi_slv_req_t [iomsb(ChsCfg.AxiExtNumSlv):0] axi_slv_req;
   axi_slv_rsp_t [iomsb(ChsCfg.AxiExtNumSlv):0] axi_slv_rsp;
 
@@ -391,7 +391,7 @@ module chimera_top_wrapper
 
   chimera_memisland_domain #(
     .Cfg             (Cfg),
-    .NumWideMst      (ChsCfg.AxiExtNumWideMst),
+    .NumWideMst      (Cfg.ChsAxiExtNumWideMst),
     .axi_narrow_req_t(axi_slv_req_t),
     .axi_narrow_rsp_t(axi_slv_rsp_t),
     .axi_wide_req_t  (axi_wide_mst_req_t),

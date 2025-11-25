@@ -69,6 +69,7 @@ package chimera_pkg;
     byte_bt        MemIslNumWideBanks;
     shrt_bt        MemIslWordsPerBank;
     int unsigned   IsolateClusters;
+    bit [cheshire_pkg::MaxExtAxiMstWidth-1:0] ChsAxiExtNumWideMst;
   } chimera_cfg_t;
 
   // SoC Config
@@ -176,8 +177,6 @@ ExtClusters
     cfg.AddrWidth = 32;
     cfg.LlcOutRegionEnd = 'hFFFF_FFFF;
 
-    cfg.AxiExtNumWideMst = $countones(ChimeraClusterCfg.hasWideMasterPort);
-
     // SCHEREMO: Two ports for each cluster: one to convert stray wides, one for the original narrow
     cfg.AxiExtNumMst = ExtClusters + $countones(ChimeraClusterCfg.hasWideMasterPort);
     cfg.AxiExtNumSlv = ExtClusters + MemoryIsland + Hyperbus;
@@ -216,6 +215,7 @@ ExtClusters
         MemIslWidePorts           : MemIslWidePorts,
         MemIslNumWideBanks        : MemIslNumWideBanks,
         MemIslWordsPerBank        : MemIslWordsPerBank,
+        ChsAxiExtNumWideMst       : $countones(ChimeraClusterCfg.hasWideMasterPort),
         default: '0
     };
 

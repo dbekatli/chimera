@@ -55,7 +55,7 @@ module chimera_cluster
   localparam int WideDataWidth = $bits(wide_out_req_o.w.data);
 
   localparam int WideMasterIdWidth = $bits(wide_out_req_o.aw.id);
-  localparam int WideSlaveIdWidth = WideMasterIdWidth + $clog2(Cfg.ChsCfg.AxiExtNumWideMst) - 1;
+  localparam int WideSlaveIdWidth = WideMasterIdWidth + $clog2(Cfg.ChsAxiExtNumWideMst) - 1;
 
   localparam int NarrowSlaveIdWidth = $bits(narrow_in_req_i.aw.id);
   localparam int NarrowMasterIdWidth = $bits(narrow_out_req_o[0].aw.id);
