@@ -32,23 +32,25 @@ module tb_chimera_soc
   );
 
   // Load a binary
-  task automatic force_write(doub_bt addr, doub_bt data);
+  task automatic force_write(doub_bt addr, doub_bt data, byte strobe);
     static doub_bt write_addr;
     static doub_bt write_data;
+    static byte write_strobe;
     write_addr = addr;
     write_data = data;
+    write_strobe=strobe;
     force fix.dut.i_memisland_domain.i_memory_island.i_memory_island.narrow_addr_i[1] = write_addr;
     force fix.dut.i_memisland_domain.i_memory_island.i_memory_island.narrow_req_i[1] = 1'b1;
     force fix.dut.i_memisland_domain.i_memory_island.i_memory_island.narrow_we_i[1] = 1'b1;
     force fix.dut.i_memisland_domain.i_memory_island.i_memory_island.narrow_wdata_i[1] = write_data;
-    force fix.dut.i_memisland_domain.i_memory_island.i_memory_island.narrow_strb_i[1] = 4'hf;
+    force fix.dut.i_memisland_domain.i_memory_island.i_memory_island.narrow_strb_i[1] = write_strobe;
     force fix.dut.i_memisland_domain.i_memory_island.i_memory_island.narrow_gnt_o[1] = 1'b0;
     force fix.dut.i_memisland_domain.i_memory_island.i_memory_island.narrow_rvalid_o[1] = 1'b0;
   endtask
 
 
   task automatic fast_elf_preload(input string binary);
-    longint sec_addr, sec_len;
+    longint sec_addr, sec_len, axi_word_size;
     $display("[FAST PRELOAD] Preloading ELF binary: %s", binary);
     if (read_elf(binary)) $fatal(1, "[JTAG] Failed to load ELF!");
     while (get_section(
@@ -59,17 +61,25 @@ module tb_chimera_soc
       if (read_section(sec_addr, bf, sec_len))
         $fatal(1, "[FAST PRELOAD] Failed to read ELF section!");
       @(posedge fix.vip.soc_clk);  // 
-      for (longint i = 0; i <= sec_len; i += riscv::XLEN / 8) begin
+
+      //narrow data port width is determined by the axi data width
+      axi_word_size = fix.DutCfg.ChsCfg.AxiDataWidth / 8;
+      for (longint i = 0; i <= sec_len; i += axi_word_size) begin
         bit checkpoint = (i != 0 && i % 512 == 0);
+
         if (checkpoint)
-          $display(
-              "[FAST PRELOAD] - %0d/%0d bytes (%0d%%)",
-              i,
-              sec_len,
-              i * 100 / (sec_len > 1 ? sec_len - 1 : 1)
-          );
+          $display("[FAST PRELOAD] - %0d/%0d bytes (%0d%%)", i, sec_len, i * 100 / (sec_len > 1 ? sec_len - 1 : 1));
+
         @(posedge fix.vip.soc_clk);
-        force_write((sec_addr + i), {bf[i+3], bf[i+2], bf[i+1], bf[i]});
+
+        if(axi_word_size==8) begin
+          force_write((sec_addr + i), {bf[i+7], bf[i+6], bf[i+5], bf[i+4], bf[i+3], bf[i+2], bf[i+1], bf[i]}, 8'hff);  
+        end else if (axi_word_size==4) begin
+          force_write((sec_addr + i), {bf[i+3], bf[i+2], bf[i+1], bf[i]}, 4'hf);
+        end
+
+        
+        
       end
     end
     @(posedge fix.vip.soc_clk);
