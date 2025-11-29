@@ -507,7 +507,7 @@ module chimera_top_wrapper
     .axi_r_chan_t    (axi_slv_r_chan_t),
     .axi_aw_chan_t   (axi_slv_aw_chan_t),
     .RegAddrWidth    (ChsCfg.AddrWidth),
-    .RegDataWidth    (ChsCfg.AxiDataWidth),
+    .RegDataWidth    (chimera_pkg::RegDataWidth),
     .reg_req_t       (reg_req_t),
     .reg_rsp_t       (reg_rsp_t),
     .RxFifoLogDepth  (32'd2),

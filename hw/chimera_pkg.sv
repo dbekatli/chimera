@@ -152,7 +152,7 @@ ExtClusters
   // --------------------
 
   function automatic chimera_cfg_t gen_chimera_cfg();
-    localparam int AddrWidth = DefaultCfg.AddrWidth;
+    localparam int AddrWidth = 48;
     localparam int MemoryIsland = 1;
     localparam int Hyperbus = 1;
 
@@ -173,8 +173,8 @@ ExtClusters
 
     // AXI CFG
     cfg.AxiMstIdWidth = 2;
-    cfg.AxiDataWidth = 32;
-    cfg.AddrWidth = 32;
+    cfg.AxiDataWidth = 64;
+    cfg.AddrWidth = AddrWidth;
     cfg.LlcOutRegionEnd = 'hFFFF_FFFF;
 
     // SCHEREMO: Two ports for each cluster: one to convert stray wides, one for the original narrow
