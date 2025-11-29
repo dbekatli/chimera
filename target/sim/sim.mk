@@ -21,20 +21,21 @@ CHIM_VLOG_ARGS += -suppress 2583
 CHIM_VLOG_ARGS += -suppress 13314
 CHIM_VLOG_ARGS += +define+HYP_USER_PRELOAD="$(HYP_USER_PRELOAD)"
 CHIM_VLOG_ARGS += +define+HYP0_PRELOAD_MEM_FILE=\"$(HYP0_PRELOAD_MEM_FILE)\"
+
 # this path should be kept relative to the vsim directory to avoid CI issues:
 # an absolute path produce inter-CI-runner file accesses
 CHIM_VLOG_ARGS += +define+PATH_TO_HYP_SDF=\"./target/sim/models/s27ks0641/s27ks0641.sdf\"
 
-VSIM_FLAGS_GUI = -voptargs=+acc
-
-override VSIM_FLAGS += -work $(VSIM_WORK)
-
+VSIM_FLAGS_GUI = -voptargs="+acc"
+override VSIM_FLAGS += -work $(VSIM_WORK) -GSimInit="zeros" -GSIM_INIT="zeros"
 # Set testbech parameters
 define add_vsim_flag
 ifdef $(1)
 	override VSIM_FLAGS += +$(1)=$$($(1))
 endif
 endef
+
+
 
 $(eval $(call add_vsim_flag,BINARY))
 $(eval $(call add_vsim_flag,SELCFG))
@@ -70,7 +71,7 @@ chim-compile: $(CHIM_SIM_DIR)/vsim/compile.tcl $(CHIM_HW_ALL)
 
 # Run simulation with GUI
 chim-run: ## Run simulation with GUI
-	$(VSIM) $(VSIM_FLAGS) $(VSIM_FLAGS_GUI) $(TB_DUT) -do "log -r /*"
+	$(VSIM) $(VSIM_FLAGS) $(VSIM_FLAGS_GUI) $(TB_DUT) -do "log -r /*; source $(CHIM_SIM_DIR)/vsim/waves.tcl; run -all"
 
 # Run simulation in batch mode
 chim-run-batch: ## Run simulation in command line mode
