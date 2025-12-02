@@ -161,8 +161,8 @@ ExtClusters
 
     // Global CFG
 
-    // Set all Chimera addresses as uncached
-    cfg.Cva6ExtCieLength = 'h0;
+    // Make sure that the memory island falls within the external CIE region
+    cfg.Cva6ExtCieLength = 'h3800_0000;
     cfg.Cva6ExtCieOnTop = 1;
 
     cfg.Vga = 0;
